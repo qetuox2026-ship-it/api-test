@@ -8,7 +8,11 @@ pipeline {
         )
     }
     triggers {
-        cron('H 2 * * *')
+            // 每天凌晨 2 点执行回归测试
+            cron('H 2 * * *')
+
+            // 每 5 分钟检查一次 GitHub 是否有新提交
+            pollSCM('H/5 * * * *')
     }
 
     environment {
@@ -30,6 +34,26 @@ pipeline {
             }
         }
 
+        stage('Select Test Suite') {
+            steps {
+                script {
+                    env.ACTIVE_SUITE = params.TEST_SUITE
+
+                    if (currentBuild.getBuildCauses(
+                        'hudson.triggers.TimerTrigger$TimerTriggerCause'
+                    )) {
+                        env.ACTIVE_SUITE = 'regression'
+                    } else if (currentBuild.getBuildCauses(
+                        'hudson.triggers.SCMTrigger$SCMTriggerCause'
+                    )) {
+                        env.ACTIVE_SUITE = 'smoke'
+                    }
+
+                    echo "Test suite: ${env.ACTIVE_SUITE}"
+                }
+            }
+        }
+
         stage('Run Tests') {
             steps {
                 withCredentials([
@@ -40,11 +64,10 @@ pipeline {
                     )
                 ]) {
                     script {
-                        if (params.TEST_SUITE == 'all') {
+                        if (env.ACTIVE_SUITE == 'all') {
                             sh '"$VENV/bin/python" -m pytest'
                         } else {
-                            sh '"$VENV/bin/python" -m pytest -m "' +
-                            params.TEST_SUITE + '"'
+                            sh '"$VENV/bin/python" -m pytest -m "$ACTIVE_SUITE"'
                         }
                     }
                 }
