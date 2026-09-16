@@ -39,3 +39,13 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 
+## Jenkins 持续集成
+
+项目通过 Jenkins Pipeline 自动执行测试：
+
+- 手动选择 smoke、regression 或 all
+- GitHub 出现新提交后自动执行 smoke
+- 每天凌晨自动执行 regression
+- 使用 Jenkins Credentials 管理接口账号
+- 自动生成 HTML 和 JUnit 测试报告
+- 自动归档测试日志和报告
