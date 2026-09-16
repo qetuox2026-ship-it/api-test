@@ -1,0 +1,6 @@
+{
+  "test": {
+    "base_url": "https://restful-booker.herokuapp.com",
+    "timeout": 10
+  }
+}

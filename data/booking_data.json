@@ -1,0 +1,24 @@
+{
+  "create_booking": {
+    "firstname": "Yingjie",
+    "lastname": "Wu",
+    "totalprice": 999,
+    "depositpaid": true,
+    "bookingdates": {
+      "checkin": "2026-11-01",
+      "checkout": "2026-11-05"
+    },
+    "additionalneeds": "Late checkout"
+  },
+  "update_booking": {
+    "firstname": "Jie",
+    "lastname": "Wu",
+    "totalprice": 1200,
+    "depositpaid": false,
+    "bookingdates": {
+      "checkin": "2026-12-01",
+      "checkout": "2026-12-08"
+    },
+    "additionalneeds": "Dinner"
+  }
+}
