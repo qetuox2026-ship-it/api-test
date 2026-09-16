@@ -1,13 +1,16 @@
 pipeline {
     agent any
     parameters {
-    choice(
-        name: 'TEST_SUITE',
-        choices: ['smoke', 'regression', 'all'],
-        description: '请选择测试范围'
-    )
-}
-
+        choice(
+            name: 'TEST_SUITE',
+            choices: ['regression', 'smoke', 'all'],
+            description: '请选择测试范围'
+        )
+    }
+    triggers {
+        cron('H 2 * * *')
+    }
+    
     environment {
         PYTHON = '/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13'
         VENV = "${WORKSPACE}/.jenkins-venv"
