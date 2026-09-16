@@ -1,5 +1,12 @@
 pipeline {
     agent any
+    parameters {
+    choice(
+        name: 'TEST_SUITE',
+        choices: ['smoke', 'regression', 'all'],
+        description: '请选择测试范围'
+    )
+}
 
     environment {
         PYTHON = '/Library/Frameworks/Python.framework/Versions/3.13/bin/python3.13'
@@ -20,9 +27,16 @@ pipeline {
             }
         }
 
-        stage('Smoke Test') {
+        stage('Run Tests') {
             steps {
-                sh '"$VENV/bin/python" -m pytest -m smoke'
+                script {
+                    if (params.TEST_SUITE == 'all') {
+                        sh '"$VENV/bin/python" -m pytest'
+                    } else {
+                        sh '"$VENV/bin/python" -m pytest -m "' +
+                        params.TEST_SUITE + '"'
+                    }
+                }
             }
         }
     }
@@ -37,3 +51,4 @@ pipeline {
         }
     }
 }
+
